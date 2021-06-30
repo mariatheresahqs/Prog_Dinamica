@@ -24,9 +24,9 @@ comente a linha 105 do arquivo Matriz.c
 
 typedef struct Matriz{
     int **labirinto;
-    char **solucao;
+    int **solucao;
     char valor[5];
-    int linhas, colunas, chave, qntMovimento;
+    int linhas, colunas, chave, qntMovimento, qntVida;
     int linhaInicial, linhaFinal, colunaInicial, colunaFinal;
 }Matriz;
 
@@ -35,5 +35,8 @@ void alocarMatriz(int ***matriz, Matriz matrizEscolhida);
 void desalocarMatriz(int **matriz, int linhas);
 void mostrarMatriz(Matriz matriz,int **matrizEscolhida);
 void preencherMatrizLabirinto(FILE *arq, Matriz labirinto);
+void preencherMatrizSolucao(Matriz matriz);
+void mostrarCaminhoColorido(Matriz matriz, int **matrizEscolhida);
+int movimenta_estudante(Matriz *matriz, Pilha** pilha, int linha, int coluna);
 
 #endif

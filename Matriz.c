@@ -47,6 +47,15 @@ void preencherMatrizLabirinto(FILE *arq, Matriz labirinto){
     }
 }
 
+//Preenchendo a matriz solução
+void preencherMatrizSolucao(Matriz matrizSolucao){
+    for(int i=0; i<matrizSolucao.linhas;i++){
+        for(int j=0;j<matrizSolucao.colunas;j++){
+            matrizSolucao.solucao[i][j] = 0;
+        }
+    }
+}
+
 // Liberando a matriz
 void desalocarMatriz(int **matriz, int linhas) {
   for (int i = 0; i < linhas; i++) {
@@ -66,3 +75,57 @@ void mostrarMatriz(Matriz matriz, int **matrizEscolhida){
     }
 }
 
+//mostra a solução colorida
+void mostrarCaminhoColorido(Matriz matriz, int **matrizEscolhida){
+    printf("\n");
+    for(int i =0; i<matriz.linhas; i++){
+        for(int j=0; j<matriz.colunas;j++){
+            if (matrizEscolhida[i][j] == '0'){ // se for 0, colocar amarelo
+                printf(YEL "%c", matrizEscolhida[i][j]);
+                printf(RESET);
+            }else if(matrizEscolhida[i][j] == 'S'){ // se for a posição do aluno, colocar vermelho            
+                printf(RED "%c", matrizEscolhida[i][j]);
+                printf(RESET);
+            }else{ // se for o caminho feito pelo aluno, colocar verde
+                printf(GRN "%c", matrizEscolhida[i][j]);
+                printf(RESET);
+            }
+        }
+        printf("\n");
+    }
+}
+
+int movimenta_estudante(Matriz *matriz, Pilha** pilha, int linha, int coluna){ 
+   
+    if(linha<0 || 
+       coluna<0 ||
+       linha>=matriz->linhas ||
+       coluna>=matriz->colunas || 
+       matriz->solucao[linha][coluna] != '0' ||
+       (matriz->qntVida<=0))
+    {
+        return 0;
+    }else if(linha == matriz->linhaFinal && coluna == matriz->colunaFinal){
+        matriz->solucao[linha][coluna] = 'S';
+        inserirPilha(&(*pilha), linha, coluna);
+        return 1;
+    }
+
+    matriz->solucao[linha][coluna] = '^';
+    matriz->qntVida+= matriz->labirinto[linha][coluna];
+    if(movimenta_estudante(matriz, pilha, linha-1, coluna)){
+        inserirPilha(&(*pilha), linha-1, coluna);
+        return 1;
+    }
+    matriz->qntVida+= matriz->labirinto[linha][coluna];
+    matriz->solucao[linha][coluna] = '<';
+    if(movimenta_estudante(matriz, pilha, linha, coluna-1)){
+        inserirPilha(&(*pilha), linha, coluna-1);
+        return 1;
+    }
+   
+    
+    matriz->qntVida+= matriz->labirinto[linha][coluna];
+    matriz -> solucao[linha][coluna] = '0';
+    return 0;
+}

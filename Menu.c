@@ -34,21 +34,36 @@ void menu(){
                 fscanf(arq, "%d %d %d ", &matriz.linhas, &matriz.colunas, &matriz.chave);
                
                 alocarMatriz(&matriz.labirinto, matriz);
+                alocarMatriz(&matriz.solucao, matriz);
+                alocarPilha(&pilha);
+
   ;
                 preencherMatrizLabirinto(arq, matriz);
+                preencherMatrizSolucao(matriz);
+
 
 
                 mostrarMatriz(matriz, matriz.labirinto);
-
-          
-            }
+                mostrarMatriz(matriz, matriz.solucao);
+                
+                if(movimenta_estudante(&matriz, &pilha, matriz.linhaInicial, matriz.colunaInicial) == 0){
+                    printf("\nO estudante se movimentou %d vezes e concluiu que o labirinto não possui saída.\n",matriz.qntMovimento);
+                }else{
+                        printf(RESET"\nSaída do labirinto inserido: ");
+                        mostrarCaminhoColorido(matriz, matriz.solucao);
+                        mostrarPilha(pilha);
+                        liberarPilha(&(*pilha));
+                        desalocarMatriz(matriz.labirinto, matriz.linhas);
+                        desalocarMatriz(matriz.solucao, matriz.linhas); 
+                    }
             
+            }
+
         }
-
-    }
     printf(RED"Programa encerrado!\n\n");
-}
+    }
 
+}
 
 void opcoes(int* opcao) {
     int valor;
